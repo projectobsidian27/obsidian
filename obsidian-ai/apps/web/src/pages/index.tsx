@@ -9,8 +9,8 @@ export default function Home() {
   const handleGetStarted = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
-    // Navigate to qualification form
-    router.push('/onboarding/qualify');
+    // Navigate to qualification form with email as query param
+    router.push(`/onboarding/qualify?email=${encodeURIComponent(email)}`);
   };
 
   return (

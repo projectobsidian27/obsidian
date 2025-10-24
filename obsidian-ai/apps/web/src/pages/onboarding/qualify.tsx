@@ -1,24 +1,54 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 
 export default function Qualify() {
   const router = useRouter();
   const [formData, setFormData] = useState({
+    email: '',
     companyName: '',
     companySize: '',
     industry: '',
     role: '',
     crm: 'hubspot',
   });
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  // Capture email from URL query parameter
+  useEffect(() => {
+    if (router.query.email && typeof router.query.email === 'string') {
+      setFormData(prev => ({ ...prev, email: router.query.email as string }));
+    }
+  }, [router.query.email]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setIsSubmitting(true);
 
-    // TODO: Store qualification data (localStorage for now, database later)
-    localStorage.setItem('qualification', JSON.stringify(formData));
+    try {
+      // POST to API endpoint
+      const response = await fetch('/api/qualification/save', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(formData),
+      });
 
-    // Navigate to trust contract
-    router.push('/onboarding/trust-contract');
+      if (!response.ok) {
+        throw new Error('Failed to save qualification data');
+      }
+
+      // Also store in localStorage as backup
+      localStorage.setItem('qualification', JSON.stringify(formData));
+
+      // Navigate to trust contract
+      router.push('/onboarding/trust-contract');
+    } catch (error) {
+      console.error('Error saving qualification:', error);
+      // Still proceed to trust contract even if API fails
+      localStorage.setItem('qualification', JSON.stringify(formData));
+      router.push('/onboarding/trust-contract');
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
@@ -217,9 +247,10 @@ export default function Qualify() {
                 <button
                   type="submit"
                   className="btn btn-primary"
+                  disabled={isSubmitting}
                   style={{ flex: '2' }}
                 >
-                  Continue to Trust Contract →
+                  {isSubmitting ? 'Saving...' : 'Continue to Trust Contract →'}
                 </button>
               </div>
             </div>
