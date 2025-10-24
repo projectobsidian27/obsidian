@@ -41,7 +41,7 @@ export function getPool(): Pool {
 /**
  * Execute a query with automatic connection handling
  */
-export async function query(text: string, params?: any[]) {
+export async function query(text: string, params?: unknown[]) {
   const pool = getPool();
   const start = Date.now();
 
