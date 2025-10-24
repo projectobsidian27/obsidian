@@ -1,10 +1,11 @@
 import type { AppProps } from 'next/app';
 import Head from 'next/head';
+import { UserProvider } from '@auth0/nextjs-auth0/client';
 import '../styles/globals.css';
 
 export default function App({ Component, pageProps }: AppProps) {
   return (
-    <>
+    <UserProvider>
       <Head>
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
@@ -13,9 +14,9 @@ export default function App({ Component, pageProps }: AppProps) {
           rel="stylesheet"
         />
         <title>Obsidian — Pipeline Discipline Platform</title>
-        <meta name="description" content="Restore order to your revenue pipeline — helping teams recover what they've already earned." />
+        <meta name="description" content="Restore order to your revenue pipeline — helping teams recover what you&apos;ve already earned." />
       </Head>
       <Component {...pageProps} />
-    </>
+    </UserProvider>
   );
 }
