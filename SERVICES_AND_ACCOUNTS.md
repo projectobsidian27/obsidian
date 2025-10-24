@@ -90,9 +90,30 @@ This document tracks all third-party services used for the Obsidian Pipeline Dis
 **Free Tier:** Yes (10,000 commands/day)
 **Notes:** Will replace local Redis for production
 
-### HubSpot API
-**Purpose:** CRM integration
-**Status:** Not yet configured
+---
+
+### 6. HubSpot Developer
+**Purpose:** CRM OAuth integration
+**Login Method:** Developer account
+**URL:** https://app.hubspot.com/developers
+**Status:** ✅ App Created
+
+**App Details:**
+- **App Name:** Obsidian Pipeline Platform
+- **App Type:** Private Legacy App
+- **Client ID:** [Stored in Render environment variables]
+- **Client Secret:** [Stored in Render environment variables]
+- **Access Token:** [Stored in Render environment variables]
+- **Redirect URL:** https://obsidian-api-iyhx.onrender.com/auth/hubspot/callback
+
+**Scopes:**
+- crm.objects.deals.read
+- crm.objects.contacts.read
+- crm.objects.companies.read
+- crm.objects.owners.read
+- crm.schemas.deals.read
+- timeline
+
 **Notes:** OAuth integration for Vanguard scanning
 
 ---
