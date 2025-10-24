@@ -8,7 +8,8 @@ export default async function handler(
     return res.status(405).json({ error: 'Method not allowed' });
   }
 
-  const { code, state } = req.query;
+  const { code } = req.query;
+  // const state = req.query.state; // TODO: Verify state token for CSRF protection
 
   if (!code || typeof code !== 'string') {
     return res.status(400).json({ error: 'Missing authorization code' });
@@ -21,8 +22,6 @@ export default async function handler(
   if (!HUBSPOT_CLIENT_ID || !HUBSPOT_CLIENT_SECRET) {
     return res.status(500).json({ error: 'HubSpot credentials not configured' });
   }
-
-  // TODO: Verify state token for CSRF protection
 
   try {
     // Exchange authorization code for access token
