@@ -1,72 +1,39 @@
 import { useState } from 'react';
+import { mockDeals, calculateMockMetrics, type Deal } from '../lib/mockData';
 
 export default function Dashboard() {
   const [timeRange, setTimeRange] = useState('30d');
+  const [useMockData, setUseMockData] = useState(true); // Toggle for mock vs real data
 
-  // Mock data - will be replaced with real HubSpot data
+  // Calculate metrics from mock data
+  const mockMetrics = calculateMockMetrics();
+
   const metrics = {
-    revenueAtRisk: 847000,
-    revenueAtRiskDelta: -12.4,
-    zombieDeals: 23,
+    revenueAtRisk: mockMetrics.revenueAtRisk,
+    revenueAtRiskDelta: -12.4, // TODO: Calculate from historical data
+    zombieDeals: mockMetrics.zombieDeals,
     zombieDealsDelta: -8.0,
-    healthyDeals: 156,
+    healthyDeals: mockMetrics.healthyDeals,
     healthyDealsDelta: 5.2,
-    avgDealAge: 47,
+    avgDealAge: mockMetrics.avgDealAge,
     avgDealAgeDelta: 12.1,
   };
 
-  const deals = [
-    {
-      id: 1,
-      name: 'Enterprise License Renewal - Acme Corp',
-      owner: 'Sarah Chen',
-      value: 125000,
-      age: 87,
-      status: 'zombie',
-      health: 34,
-      lastActivity: '34 days ago',
-    },
-    {
-      id: 2,
-      name: 'Q4 Platform Upgrade - TechStart Inc',
-      owner: 'Michael Torres',
-      value: 95000,
-      age: 62,
-      status: 'at-risk',
-      health: 58,
-      lastActivity: '12 days ago',
-    },
-    {
-      id: 3,
-      name: 'Annual Contract - DataFlow Systems',
-      owner: 'Jessica Park',
-      value: 210000,
-      age: 28,
-      status: 'healthy',
-      health: 92,
-      lastActivity: '2 hours ago',
-    },
-    {
-      id: 4,
-      name: 'New Implementation - CloudNet',
-      owner: 'David Kim',
-      value: 78000,
-      age: 71,
-      status: 'zombie',
-      health: 41,
-      lastActivity: '28 days ago',
-    },
-    {
-      id: 5,
-      name: 'Expansion Deal - FinTech Solutions',
-      owner: 'Sarah Chen',
-      value: 156000,
-      age: 19,
-      status: 'healthy',
-      health: 88,
-      lastActivity: '1 day ago',
-    },
-  ];
+  // Use mock deals and format last activity
+  const formatLastActivity = (days: number): string => {
+    if (days === 0) return 'Today';
+    if (days === 1) return '1 day ago';
+    if (days < 30) return `${days} days ago`;
+    const months = Math.floor(days / 30);
+    if (months === 1) return '1 month ago';
+    return `${months} months ago`;
+  };
+
+  // Transform mock deals for display
+  const deals = mockDeals.slice(0, 10).map(deal => ({
+    ...deal,
+    lastActivityFormatted: formatLastActivity(deal.daysSinceLastActivity),
+  }));
 
   const getStatusPill = (status: string) => {
     switch (status) {
@@ -109,15 +76,27 @@ export default function Dashboard() {
               <span style={{ color: 'var(--color-text-muted)', fontSize: '14px', cursor: 'pointer' }}>Settings</span>
             </nav>
           </div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-            <span style={{ fontSize: '13px', color: 'var(--color-text-muted)' }}>HubSpot Connected</span>
-            <div style={{
-              width: '8px',
-              height: '8px',
-              borderRadius: '50%',
-              background: 'var(--color-success)',
-              boxShadow: '0 0 8px var(--color-success)',
-            }} />
+          <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+            <label style={{ display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer', fontSize: '13px', color: 'var(--color-text-muted)' }}>
+              <input
+                type="checkbox"
+                checked={useMockData}
+                onChange={(e) => setUseMockData(e.target.checked)}
+              />
+              <span>Use Mock Data</span>
+            </label>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+              <span style={{ fontSize: '13px', color: 'var(--color-text-muted)' }}>
+                {useMockData ? 'Demo Mode' : 'HubSpot Connected'}
+              </span>
+              <div style={{
+                width: '8px',
+                height: '8px',
+                borderRadius: '50%',
+                background: useMockData ? 'var(--color-signal-amber)' : 'var(--color-success)',
+                boxShadow: useMockData ? '0 0 8px var(--color-signal-amber)' : '0 0 8px var(--color-success)',
+              }} />
+            </div>
           </div>
         </div>
       </header>
@@ -283,14 +262,14 @@ export default function Dashboard() {
                         </td>
                         <td>{deal.owner}</td>
                         <td style={{ fontFamily: 'var(--font-mono)', fontWeight: '600' }}>
-                          {formatCurrency(deal.value)}
+                          {formatCurrency(deal.amount)}
                         </td>
                         <td>
                           <span style={{
-                            color: deal.age > 60 ? 'var(--color-crimson-alert)' : 'var(--color-text-muted)',
-                            fontWeight: deal.age > 60 ? '600' : '400',
+                            color: deal.dealAge > 60 ? 'var(--color-crimson-alert)' : 'var(--color-text-muted)',
+                            fontWeight: deal.dealAge > 60 ? '600' : '400',
                           }}>
-                            {deal.age} days
+                            {deal.dealAge} days
                           </span>
                         </td>
                         <td>
@@ -304,19 +283,19 @@ export default function Dashboard() {
                               maxWidth: '60px',
                             }}>
                               <div style={{
-                                width: `${deal.health}%`,
+                                width: `${deal.healthScore}%`,
                                 height: '100%',
-                                background: deal.health > 80 ? 'var(--color-success)' : deal.health > 50 ? 'var(--color-warning)' : 'var(--color-danger)',
+                                background: deal.healthScore > 80 ? 'var(--color-success)' : deal.healthScore > 50 ? 'var(--color-warning)' : 'var(--color-danger)',
                               }} />
                             </div>
                             <span style={{ fontSize: '13px', fontWeight: '600', minWidth: '35px' }}>
-                              {deal.health}%
+                              {deal.healthScore}%
                             </span>
                           </div>
                         </td>
                         <td>{getStatusPill(deal.status)}</td>
                         <td style={{ color: 'var(--color-text-muted)', fontSize: '13px' }}>
-                          {deal.lastActivity}
+                          {deal.lastActivityFormatted}
                         </td>
                         <td>
                           <button className="btn btn-primary" style={{ padding: '6px 12px', fontSize: '13px' }}>
