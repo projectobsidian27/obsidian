@@ -1,0 +1,1 @@
+This folder contains business docs. Each file also has a PDF backup in _backups_pdf when supported.

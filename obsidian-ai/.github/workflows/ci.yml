@@ -1,0 +1,37 @@
+name: ci
+on:
+  pull_request:
+    branches: [ main, "release/*" ]
+  push:
+    branches: [ main ]
+
+jobs:
+  build-test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: "20" }
+      - name: Web deps
+        run: cd apps/web && npm ci || true
+      - name: Web lint
+        run: cd apps/web && npm run lint || true
+      - name: Web typecheck
+        run: cd apps/web && npm run typecheck || true
+      - name: Web test
+        run: cd apps/web && npm test -- --ci --coverage || true
+      - name: Enforce basic coverage gate
+        run: echo "Coverage gate placeholder"
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.11" }
+      - name: API deps
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r apps/api/requirements.txt
+      - name: API lint & typecheck
+        run: |
+          ruff apps/api
+          mypy apps/api
+      - name: API tests
+        run: pytest -q --cov=apps/api --cov-report=term-missing

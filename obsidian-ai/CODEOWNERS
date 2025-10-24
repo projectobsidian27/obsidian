@@ -1,0 +1,4 @@
+*       @you @techlead
+apps/api/** @backend-lead @security-lead
+apps/web/** @frontend-lead
+infra/**    @devops-lead @security-lead

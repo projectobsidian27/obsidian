@@ -1,0 +1,17 @@
+name: security
+on: [pull_request, workflow_dispatch]
+jobs:
+  scans:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Gitleaks
+        uses: gitleaks/gitleaks-action@v2
+        with:
+          args: "--no-banner --redact"
+      - name: Semgrep
+        uses: returntocorp/semgrep-action@v1
+        with:
+          config: ./.semgrep.yml
+          generateSarif: true
+          publishDeployment: false

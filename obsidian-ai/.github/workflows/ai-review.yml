@@ -1,0 +1,28 @@
+name: ai-review
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+jobs:
+  ai-suggestions:
+    runs-on: ubuntu-latest
+    permissions:
+      pull-requests: write
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - name: Collect diff
+        id: diff
+        run: |
+          git fetch origin ${{ github.base_ref }} --depth=1 || true
+          git diff origin/${{ github.base_ref }}...HEAD > diff.patch || true
+          echo "patch<<EOF" >> $GITHUB_OUTPUT
+          sed -e 's/`/\`/g' diff.patch >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
+      - name: Post PR comment (stub)
+        uses: marocchino/sticky-pull-request-comment@v2
+        with:
+          message: |
+            🤖 AI Review Suggestions (stub)
+            - Use feature flags; add idempotency on task writes; increase enforcement coverage.
+            - Check SQL parameterization; validate HubSpot scopes.
+            - Add property-based tests for scoring; sanitize TTS input.

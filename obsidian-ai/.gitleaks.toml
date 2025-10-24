@@ -1,0 +1,4 @@
+title = "Obsidian Secrets Policy"
+[allowlist]
+  description = "Allow test placeholders"
+  regexes = ["(?i)example|dummy|test-key"]

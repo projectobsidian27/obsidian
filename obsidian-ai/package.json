@@ -1,0 +1,15 @@
+{
+  "name": "obsidian",
+  "private": true,
+  "version": "0.1.0",
+  "workspaces": ["apps/web","packages/shared"],
+  "scripts": {
+    "install:all": "npm install --workspaces",
+    "build": "npm run build -w apps/web",
+    "dev": "npm run dev -w apps/web",
+    "lint": "npm run lint -w apps/web",
+    "typecheck": "npm run typecheck -w apps/web",
+    "test": "npm run test -w apps/web",
+    "format": "npm run format -w apps/web"
+  }
+}

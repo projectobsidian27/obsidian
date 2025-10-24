@@ -1,0 +1,13 @@
+rules:
+  - id: ts-no-eval
+    pattern: eval($X)
+    message: "Do not use eval"
+    severity: ERROR
+    languages: [typescript, javascript]
+  - id: py-no-raw-sql
+    patterns:
+      - pattern: cursor.execute($QUERY)
+      - pattern-not: cursor.execute("SELECT ... WHERE id=%s", (...))
+    message: "Use parameterized queries"
+    severity: ERROR
+    languages: [python]
