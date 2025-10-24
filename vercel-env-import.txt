@@ -1,0 +1,7 @@
+AUTH0_SECRET="52g1XzhLlrVDa2_iwHvIdd-n6yImvKfL_V7mHQpdzs2OTowU05HzmtrsdJZ_ZM74"
+AUTH0_CLIENT_SECRET="52g1XzhLlrVDa2_iwHvIdd-n6yImvKfL_V7mHQpdzs2OTowU05HzmtrsdJZ_ZM74"
+AUTH0_ISSUER_BASE_URL="https://dev-ybvv5kwju22dtdbv.us.auth0.com"
+AUTH0_CLIENT_ID="7c1oR94u34DiCswzK8L8B2sSf45ouU27"
+AUTH0_BASE_URL="https://obsidian-nick-misewiczs-projects-e72f50c6.vercel.app"
+NEXT_PUBLIC_API_URL="http://localhost:8000"
+NEXT_PUBLIC_APP_URL="https://obsidian-nick-misewiczs-projects-e72f50c6.vercel.app"

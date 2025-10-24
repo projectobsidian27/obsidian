@@ -1,4 +1,3 @@
-import Link from 'next/link';
 import { useState } from 'react';
 
 export default function Home() {
@@ -22,7 +21,7 @@ export default function Home() {
           Obsidian
         </h1>
         <p style={{ fontSize: '20px', color: 'var(--color-text-muted)', maxWidth: '600px', margin: '0 auto' }}>
-          Restore order to your revenue pipeline — recover what you've already earned
+          Restore order to your revenue pipeline — recover what you&apos;ve already earned
         </p>
       </header>
 
