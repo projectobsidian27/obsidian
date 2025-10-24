@@ -1,26 +1,42 @@
 import { useState } from 'react';
+import { useRouter } from 'next/router';
 
 export default function Home() {
+  const router = useRouter();
   const [email, setEmail] = useState('');
   const [isLoading, setIsLoading] = useState(false);
 
   const handleGetStarted = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
-    // Redirect to Auth0 login with email hint
-    window.location.href = `/api/auth/login?login_hint=${encodeURIComponent(email)}`;
+    // Navigate to qualification form
+    router.push('/onboarding/qualify');
   };
 
   return (
-    <div className="container">
-      <header style={{ padding: '48px 0', textAlign: 'center' }}>
-        <h1 style={{ fontSize: '48px', fontWeight: '700', marginBottom: '16px' }}>
-          Obsidian
-        </h1>
-        <p style={{ fontSize: '20px', color: 'var(--color-text-muted)', maxWidth: '600px', margin: '0 auto' }}>
-          Restore order to your revenue pipeline — recover what you&apos;ve already earned
-        </p>
-      </header>
+    <div style={{ minHeight: '100vh', background: 'var(--color-bg)' }}>
+      {/* Hero Section */}
+      <header className="container" style={{ maxWidth: '1200px', padding: '80px 24px 48px', textAlign: 'center' }}>
+        <div style={{ marginBottom: 'var(--spacing-lg)' }}>
+          <h1 style={{
+            fontSize: 'var(--font-size-5xl)',
+            fontWeight: 'var(--font-weight-extrabold)',
+            marginBottom: 'var(--spacing-lg)',
+            letterSpacing: 'var(--letter-spacing-tight)',
+            lineHeight: 'var(--line-height-tight)',
+          }}>
+            Obsidian
+          </h1>
+          <p style={{
+            fontSize: 'var(--font-size-xl)',
+            color: 'var(--color-text-muted)',
+            maxWidth: '700px',
+            margin: '0 auto',
+            lineHeight: 'var(--line-height-relaxed)',
+          }}>
+            Restore order to your revenue pipeline — recover what you&apos;ve already earned
+          </p>
+        </div>
 
       <main style={{ maxWidth: '800px', margin: '0 auto', padding: '48px 0' }}>
         <section style={{ marginBottom: '64px' }}>
