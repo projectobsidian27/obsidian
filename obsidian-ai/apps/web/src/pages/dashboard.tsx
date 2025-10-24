@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { mockDeals, calculateMockMetrics, type Deal } from '../lib/mockData';
+import { mockDeals, calculateMockMetrics } from '../lib/mockData';
 
 export default function Dashboard() {
   const [timeRange, setTimeRange] = useState('30d');
