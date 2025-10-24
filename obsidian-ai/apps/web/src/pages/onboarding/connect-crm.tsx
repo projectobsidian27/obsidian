@@ -7,9 +7,8 @@ export default function ConnectCRM() {
 
   const handleConnectHubSpot = async () => {
     setIsConnecting(true);
-    // Redirect to backend HubSpot OAuth flow
-    const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'https://obsidian-api-iyhx.onrender.com';
-    window.location.href = `${apiUrl}/auth/hubspot/connect`;
+    // Redirect to Vercel API route for instant OAuth (no cold start)
+    window.location.href = '/api/hubspot/connect';
   };
 
   return (
