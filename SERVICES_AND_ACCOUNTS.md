@@ -99,14 +99,14 @@ This document tracks all third-party services used for the Obsidian Pipeline Dis
 **Status:** ✅ App Created
 
 **App Details:**
+- **App ID:** 22635895
 - **App Name:** Obsidian Pipeline Platform
-- **App Type:** Private Legacy App
-- **Client ID:** [Stored in Render environment variables]
-- **Client Secret:** [Stored in Render environment variables]
-- **Access Token:** [Stored in Render environment variables]
-- **Redirect URL:** https://obsidian-api-iyhx.onrender.com/auth/hubspot/callback
+- **App Type:** Public OAuth App
+- **Client ID:** c5676eb8-7188-44b3-a72b-2b5a42ed1c27
+- **Client Secret:** 6d160a83-5aee-4c58-8f75-93128ae7bb6b
+- **Redirect URI:** https://obsidian-nick-misewiczs-projects-e72f50c6.vercel.app/api/hubspot/callback
 
-**Scopes:**
+**OAuth Scopes:**
 - crm.objects.deals.read
 - crm.objects.contacts.read
 - crm.objects.companies.read
@@ -114,7 +114,11 @@ This document tracks all third-party services used for the Obsidian Pipeline Dis
 - crm.schemas.deals.read
 - timeline
 
-**Notes:** OAuth integration for Vanguard scanning
+**Environment Variables (Vercel):**
+- HUBSPOT_CLIENT_ID
+- HUBSPOT_CLIENT_SECRET
+
+**Notes:** OAuth integration for pipeline scanning. OAuth flow runs on Vercel serverless functions for instant response (no cold starts).
 
 ---
 
