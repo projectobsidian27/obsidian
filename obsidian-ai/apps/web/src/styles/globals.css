@@ -5,22 +5,87 @@
   --color-electric-gray: #C1C1C1;
   --color-signal-amber: #F6C667;
 
+  /* Extended Accent Palette - For Data Visualization & Secondary UI */
+  --color-deep-teal: #2c4b42;
+  --color-burnt-sienna: #7d3c14;
+  --color-slate-gray: #3e3530;
+  --color-desert-sand: #ba9a5d;
+  --color-crimson-alert: #ec1b31;
+
   /* Application Colors */
   --color-bg: #0D0D0D;
   --color-surface: #1a1a1f;
+  --color-surface-elevated: #24242a;
   --color-border: #3B3B3B;
+  --color-border-subtle: #2a2a2f;
   --color-text: #e8e8f0;
   --color-text-muted: #C1C1C1;
+  --color-text-subtle: #8a8a95;
   --color-primary: #F6C667;
   --color-primary-hover: #f4b84a;
   --color-success: #10b981;
-  --color-warning: #f59e0b;
-  --color-danger: #ef4444;
+  --color-warning: #ba9a5d; /* Using Desert Sand for warnings */
+  --color-danger: #ec1b31; /* Using Crimson Alert for critical errors */
+  --color-info: #2c4b42; /* Using Deep Teal for informational states */
 
   /* Typography - Brand Guidelines */
   --font-heading: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   --font-body: 'IBM Plex Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   --font-mono: ui-monospace, SFMono-Regular, 'SF Mono', Consolas, 'Liberation Mono', Menlo, monospace;
+
+  /* Typography Scale */
+  --font-size-xs: 13px;
+  --font-size-sm: 14px;
+  --font-size-base: 16px;
+  --font-size-lg: 18px;
+  --font-size-xl: 20px;
+  --font-size-2xl: 24px;
+  --font-size-3xl: 30px;
+  --font-size-4xl: 36px;
+  --font-size-5xl: 48px;
+
+  /* Font Weights */
+  --font-weight-light: 300;
+  --font-weight-normal: 400;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
+  --font-weight-bold: 700;
+  --font-weight-extrabold: 800;
+
+  /* Spacing Scale */
+  --spacing-xs: 4px;
+  --spacing-sm: 8px;
+  --spacing-md: 16px;
+  --spacing-lg: 24px;
+  --spacing-xl: 32px;
+  --spacing-2xl: 48px;
+  --spacing-3xl: 64px;
+
+  /* Border Radius */
+  --radius-sm: 6px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --radius-xl: 16px;
+  --radius-full: 9999px;
+
+  /* Shadows */
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.5);
+  --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.5);
+  --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.5);
+  --shadow-glow-amber: 0 4px 12px rgba(246, 198, 103, 0.25);
+  --shadow-glow-teal: 0 4px 12px rgba(44, 75, 66, 0.25);
+
+  /* Transitions */
+  --transition-fast: 0.15s ease;
+  --transition-base: 0.2s ease;
+  --transition-slow: 0.3s ease;
+
+  /* Z-Index Scale */
+  --z-dropdown: 1000;
+  --z-sticky: 1020;
+  --z-modal-backdrop: 1040;
+  --z-modal: 1050;
+  --z-tooltip: 1070;
 }
 
 * {
@@ -141,6 +206,143 @@ button {
 }
 
 .badge-danger {
-  background: rgba(239, 68, 68, 0.1);
+  background: rgba(236, 27, 49, 0.1);
   color: var(--color-danger);
+}
+
+.badge-info {
+  background: rgba(44, 75, 66, 0.1);
+  color: var(--color-info);
+}
+
+/* Accent Color Utilities */
+.bg-deep-teal {
+  background-color: var(--color-deep-teal);
+}
+
+.bg-burnt-sienna {
+  background-color: var(--color-burnt-sienna);
+}
+
+.bg-slate-gray {
+  background-color: var(--color-slate-gray);
+}
+
+.bg-desert-sand {
+  background-color: var(--color-desert-sand);
+}
+
+.text-deep-teal {
+  color: var(--color-deep-teal);
+}
+
+.text-burnt-sienna {
+  color: var(--color-burnt-sienna);
+}
+
+.text-desert-sand {
+  color: var(--color-desert-sand);
+}
+
+.text-crimson-alert {
+  color: var(--color-crimson-alert);
+}
+
+/* Border Utilities */
+.border-deep-teal {
+  border-color: var(--color-deep-teal);
+}
+
+.border-burnt-sienna {
+  border-color: var(--color-burnt-sienna);
+}
+
+/* Chart & Data Visualization Colors */
+.chart-color-1 {
+  color: var(--color-signal-amber);
+}
+
+.chart-color-2 {
+  color: var(--color-deep-teal);
+}
+
+.chart-color-3 {
+  color: var(--color-desert-sand);
+}
+
+.chart-color-4 {
+  color: var(--color-burnt-sienna);
+}
+
+.chart-color-5 {
+  color: var(--color-electric-gray);
+}
+
+/* Status Indicators */
+.status-healthy {
+  color: var(--color-success);
+}
+
+.status-warning {
+  color: var(--color-warning);
+}
+
+.status-critical {
+  color: var(--color-danger);
+}
+
+.status-info {
+  color: var(--color-info);
+}
+
+/* Glow Effects */
+.glow-amber {
+  box-shadow: var(--shadow-glow-amber);
+}
+
+.glow-teal {
+  box-shadow: var(--shadow-glow-teal);
+}
+
+/* Surface Variations */
+.surface-elevated {
+  background: var(--color-surface-elevated);
+}
+
+.surface-subtle {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border-subtle);
+}
+
+/* Typography Utilities */
+.text-xs {
+  font-size: var(--font-size-xs);
+}
+
+.text-sm {
+  font-size: var(--font-size-sm);
+}
+
+.text-base {
+  font-size: var(--font-size-base);
+}
+
+.text-lg {
+  font-size: var(--font-size-lg);
+}
+
+.text-xl {
+  font-size: var(--font-size-xl);
+}
+
+.font-medium {
+  font-weight: var(--font-weight-medium);
+}
+
+.font-semibold {
+  font-weight: var(--font-weight-semibold);
+}
+
+.font-bold {
+  font-weight: var(--font-weight-bold);
 }
