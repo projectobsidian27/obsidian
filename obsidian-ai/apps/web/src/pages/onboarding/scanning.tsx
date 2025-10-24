@@ -43,9 +43,9 @@ export default function Scanning() {
         stepIndex++;
       }
 
-      // Navigate to results
+      // Navigate to dashboard
       setTimeout(() => {
-        router.push('/dashboard/report');
+        router.push('/dashboard');
       }, 500);
     };
 
