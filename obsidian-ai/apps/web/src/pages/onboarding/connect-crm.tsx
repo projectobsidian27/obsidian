@@ -7,11 +7,9 @@ export default function ConnectCRM() {
 
   const handleConnectHubSpot = async () => {
     setIsConnecting(true);
-    // TODO: Implement actual HubSpot OAuth flow
-    // For now, simulate the connection
-    setTimeout(() => {
-      router.push('/onboarding/scanning');
-    }, 1500);
+    // Redirect to backend HubSpot OAuth flow
+    const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'https://obsidian-api-iyhx.onrender.com';
+    window.location.href = `${apiUrl}/auth/hubspot/connect`;
   };
 
   return (
