@@ -37,6 +37,7 @@ export default function Home() {
             Restore order to your revenue pipeline — recover what you&apos;ve already earned
           </p>
         </div>
+      </header>
 
       <main style={{ maxWidth: '800px', margin: '0 auto', padding: '48px 0' }}>
         <section style={{ marginBottom: '64px' }}>

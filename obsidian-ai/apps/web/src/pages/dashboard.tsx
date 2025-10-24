@@ -1,8 +1,6 @@
 import { useState } from 'react';
-import { useRouter } from 'next/router';
 
 export default function Dashboard() {
-  const router = useRouter();
   const [timeRange, setTimeRange] = useState('30d');
 
   // Mock data - will be replaced with real HubSpot data
@@ -105,10 +103,10 @@ export default function Dashboard() {
               Obsidian
             </h1>
             <nav style={{ display: 'flex', gap: '16px' }}>
-              <a href="/dashboard" style={{ color: 'var(--color-primary)', fontWeight: '600', fontSize: '14px' }}>Dashboard</a>
-              <a href="/deals" style={{ color: 'var(--color-text-muted)', fontSize: '14px' }}>Deals</a>
-              <a href="/reports" style={{ color: 'var(--color-text-muted)', fontSize: '14px' }}>Reports</a>
-              <a href="/settings" style={{ color: 'var(--color-text-muted)', fontSize: '14px' }}>Settings</a>
+              <span style={{ color: 'var(--color-primary)', fontWeight: '600', fontSize: '14px', cursor: 'pointer' }}>Dashboard</span>
+              <span style={{ color: 'var(--color-text-muted)', fontSize: '14px', cursor: 'pointer' }}>Deals</span>
+              <span style={{ color: 'var(--color-text-muted)', fontSize: '14px', cursor: 'pointer' }}>Reports</span>
+              <span style={{ color: 'var(--color-text-muted)', fontSize: '14px', cursor: 'pointer' }}>Settings</span>
             </nav>
           </div>
           <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
