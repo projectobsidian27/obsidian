@@ -64,21 +64,21 @@ export default function Home() {
 
         <section style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '24px', marginBottom: '64px' }}>
           <div className="card">
-            <h3 style={{ fontSize: '18px', marginBottom: '8px' }}>⚡ Discipline > Hustle</h3>
+            <h3 style={{ fontSize: '18px', marginBottom: '8px' }}>⚡ Discipline &gt; Hustle</h3>
             <p style={{ color: 'var(--color-text-muted)', fontSize: '14px' }}>
               Stop chasing deals. Start enforcing process with CRM-native task injection.
             </p>
           </div>
 
           <div className="card">
-            <h3 style={{ fontSize: '18px', marginBottom: '8px' }}>🎯 Outcome > Noise</h3>
+            <h3 style={{ fontSize: '18px', marginBottom: '8px' }}>🎯 Outcome &gt; Noise</h3>
             <p style={{ color: 'var(--color-text-muted)', fontSize: '14px' }}>
               Explainable signals with confidence scores. No black boxes.
             </p>
           </div>
 
           <div className="card">
-            <h3 style={{ fontSize: '18px', marginBottom: '8px' }}>📊 Signal > Vanity</h3>
+            <h3 style={{ fontSize: '18px', marginBottom: '8px' }}>📊 Signal &gt; Vanity</h3>
             <p style={{ color: 'var(--color-text-muted)', fontSize: '14px' }}>
               Track what matters: Pipeline integrity, motion discipline, revival opportunities.
             </p>

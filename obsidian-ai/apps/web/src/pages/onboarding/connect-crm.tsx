@@ -169,9 +169,9 @@ export default function ConnectCRM() {
         <div className="card" style={{ background: 'rgba(99, 102, 241, 0.05)' }}>
           <h3 style={{ fontSize: '16px', marginBottom: '12px' }}>What happens next?</h3>
           <ol style={{ paddingLeft: '20px', color: 'var(--color-text-muted)', fontSize: '14px', lineHeight: '1.8' }}>
-            <li>You'll be redirected to HubSpot to authorize access</li>
+            <li>You&apos;ll be redirected to HubSpot to authorize access</li>
             <li>Vanguard will scan your pipeline (takes ~90 seconds)</li>
-            <li>You'll receive an explainable diagnostic report</li>
+            <li>You&apos;ll receive an explainable diagnostic report</li>
             <li>Optional: Install our tracking pixel to measure ROI</li>
           </ol>
         </div>

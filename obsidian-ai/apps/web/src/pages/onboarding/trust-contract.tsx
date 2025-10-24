@@ -18,7 +18,7 @@ export default function TrustContract() {
           Trust Contract
         </h1>
         <p style={{ color: 'var(--color-text-muted)', fontSize: '16px' }}>
-          Before we connect to your CRM, here's how we handle your data
+          Before we connect to your CRM, here&apos;s how we handle your data
         </p>
       </header>
 

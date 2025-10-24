@@ -50,6 +50,7 @@ export default function Scanning() {
     };
 
     runSteps();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
@@ -118,7 +119,7 @@ export default function Scanning() {
           </div>
 
           <div className="card" style={{ background: 'rgba(99, 102, 241, 0.05)' }}>
-            <h3 style={{ fontSize: '16px', marginBottom: '12px' }}>What we're checking:</h3>
+            <h3 style={{ fontSize: '16px', marginBottom: '12px' }}>What we&apos;re checking:</h3>
             <ul style={{ paddingLeft: '20px', color: 'var(--color-text-muted)', fontSize: '14px', lineHeight: '1.8' }}>
               <li>Deals stuck in stages beyond normal velocity</li>
               <li>Ownership gaps and unassigned opportunities</li>
