@@ -21,15 +21,15 @@ This document tracks all third-party services used for the Obsidian Pipeline Dis
 **URL:** https://vercel.com/nick-misewiczs-projects-e72f50c6/obsidian
 **Production URL:** https://obsidian-nick-misewiczs-projects-e72f50c6.vercel.app
 **Environment Variables:**
-- AUTH0_SECRET
-- AUTH0_CLIENT_SECRET
-- AUTH0_ISSUER_BASE_URL
-- AUTH0_CLIENT_ID
-- AUTH0_BASE_URL
-- NEXT_PUBLIC_API_URL
-- NEXT_PUBLIC_APP_URL
+- AUTH0_SECRET: `52g1XzhLlrVDa2_iwHvIdd-n6yImvKfL_V7mHQpdzs2OTowU05HzmtrsdJZ_ZM74`
+- AUTH0_CLIENT_SECRET: `52g1XzhLlrVDa2_iwHvIdd-n6yImvKfL_V7mHQpdzs2OTowU05HzmtrsdJZ_ZM74`
+- AUTH0_ISSUER_BASE_URL: `https://dev-ybvv5kwju22dtdbv.us.auth0.com`
+- AUTH0_CLIENT_ID: `7c1oR94u34DiCswzK8L8B2sSf45ouU27`
+- AUTH0_BASE_URL: `https://obsidian-nick-misewiczs-projects-e72f50c6.vercel.app`
+- NEXT_PUBLIC_API_URL: `https://obsidian-api-iyhx.onrender.com` ✅ Updated
+- NEXT_PUBLIC_APP_URL: `https://obsidian-nick-misewiczs-projects-e72f50c6.vercel.app`
 
-**Notes:** Auto-deploys on push to main branch
+**Notes:** Auto-deploys on push to main branch. Frontend now connected to Render backend.
 
 ---
 
@@ -50,10 +50,18 @@ This document tracks all third-party services used for the Obsidian Pipeline Dis
 ### 4. Render
 **Purpose:** Backend hosting (FastAPI), PostgreSQL database
 **Login Method:** Connected via GitHub
-**URL:** https://render.com
-**Status:** ✅ Account created
-**Resources:** TBD (Web Service + PostgreSQL to be created)
-**Notes:** Free tier includes 750 hours/month
+**URL:** https://dashboard.render.com
+**Blueprint ID:** exs-d3tu2v1r0fns73apirqg
+**Status:** ✅ Live and Running
+
+**Resources:**
+- **Database:** obsidian-db (PostgreSQL 15) - ✅ Live
+  - Connection: `postgresql://obsidian_prod_user:ET1FDE7S5gpbWOq5vXjkl7lssbOvfe0B@dpg-d3tu316r433s73dvhovg-a.oregon-postgres.render.com/obsidian_prod`
+  - Schema: 7 tables created (users, crm_connections, scans, enforcement_logs, shared_reports, tracking_pixels, audit_logs)
+- **Web Service:** obsidian-api (Python FastAPI) - ✅ Live
+  - **Backend URL:** https://obsidian-api-iyhx.onrender.com
+
+**Notes:** Free tier includes 750 hours/month for web service, PostgreSQL free tier includes 90 days then $7/month
 
 ---
 
