@@ -1,4 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
+import { query, encryptToken } from '../../../lib/db';
 
 export default async function handler(
   req: NextApiRequest,
@@ -69,12 +70,64 @@ export default async function handler(
       has_refresh_token: !!refresh_token
     });
 
-    // TODO: Store in database:
-    // - access_token (encrypted)
-    // - refresh_token (encrypted)
-    // - expires_at (current time + expires_in)
-    // - hub_id
-    // - user_id
+    // Store tokens in database
+    try {
+      // Get qualification data from localStorage (via session/cookie in production)
+      // For now, we'll create a user with just the hub_id as identifier
+      const email = `hubspot_${hub_id}@temp.obsidian.app`; // Temporary email until we implement proper auth
+
+      // Upsert user
+      const userResult = await query(
+        `INSERT INTO users (email, auth0_user_id, metadata)
+         VALUES ($1, $2, $3::jsonb)
+         ON CONFLICT (email)
+         DO UPDATE SET last_login = NOW(), metadata = $3::jsonb
+         RETURNING id`,
+        [email, `hubspot_${hub_id}`, JSON.stringify({ hub_id, user_id })]
+      );
+
+      const userId = userResult.rows[0].id;
+
+      // Calculate token expiration
+      const expiresAt = new Date(Date.now() + expires_in * 1000);
+
+      // Encrypt and store tokens
+      const encryptedAccessToken = encryptToken(access_token);
+      const encryptedRefreshToken = refresh_token ? encryptToken(refresh_token) : null;
+
+      // Upsert CRM connection
+      await query(
+        `INSERT INTO crm_connections (
+          user_id, crm_type, access_token_encrypted, refresh_token_encrypted,
+          token_expires_at, tenant_id, is_active, metadata
+         )
+         VALUES ($1, $2, $3, $4, $5, $6, $7, $8::jsonb)
+         ON CONFLICT (user_id, crm_type)
+         DO UPDATE SET
+           access_token_encrypted = $3,
+           refresh_token_encrypted = $4,
+           token_expires_at = $5,
+           tenant_id = $6,
+           is_active = $7,
+           last_sync_at = NOW(),
+           metadata = $8::jsonb`,
+        [
+          userId,
+          'hubspot',
+          encryptedAccessToken,
+          encryptedRefreshToken,
+          expiresAt,
+          hub_id.toString(),
+          true,
+          JSON.stringify({ user_id, connected_via: 'oauth' })
+        ]
+      );
+
+      console.log('Tokens stored successfully in database');
+    } catch (dbError) {
+      console.error('Database error storing tokens:', dbError);
+      // Don't fail the OAuth flow if database fails - redirect anyway
+    }
 
     // Redirect to scanning page with success
     res.redirect('/onboarding/scanning?status=connected&crm=hubspot&hub_id=' + hub_id);
