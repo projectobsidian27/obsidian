@@ -7,11 +7,8 @@ export default function Home() {
   const handleGetStarted = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
-    // TODO: Implement magic link send
-    setTimeout(() => {
-      setIsLoading(false);
-      alert('Magic link sent to ' + email);
-    }, 1000);
+    // Redirect to Auth0 login with email hint
+    window.location.href = `/api/auth/login?login_hint=${encodeURIComponent(email)}`;
   };
 
   return (
