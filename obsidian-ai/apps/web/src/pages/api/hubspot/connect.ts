@@ -21,11 +21,32 @@ export default async function handler(
   // TODO: Store state in session/cookie for verification in callback
 
   const scopes = [
+    // Core CRM objects
     'crm.objects.deals.read',
     'crm.objects.contacts.read',
     'crm.objects.companies.read',
     'crm.objects.owners.read',
+
+    // Additional CRM objects
+    'crm.objects.appointments.read',
+    'crm.objects.subscriptions.read',
+    'crm.objects.feedback_submissions.read',
+    'crm.objects.invoices.read',
+
+    // Schemas
     'crm.schemas.deals.read',
+    'crm.schemas.contacts.read',
+    'crm.schemas.companies.read',
+    'crm.schemas.appointments.read',
+    'crm.schemas.subscriptions.read',
+    'crm.schemas.invoices.read',
+
+    // Communication & activity
+    'sales-email-read',
+    'conversations.read',
+    'crm.extensions_calling_transcripts.read',
+
+    // Timeline
     'timeline'
   ];
 
