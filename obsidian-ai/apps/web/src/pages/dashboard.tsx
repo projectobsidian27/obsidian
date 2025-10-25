@@ -35,6 +35,7 @@ interface ApiResponse {
   deals: Deal[];
   metrics: Metrics;
   fetchedAt: string;
+  error?: string;
 }
 
 export default function Dashboard() {
