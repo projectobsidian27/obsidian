@@ -1,7 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { query } from '../../../lib/db';
 import { fetchHubSpotDeals, fetchHubSpotOwners, transformHubSpotDeal } from '../../../lib/hubspot';
-import { createZombieDealAlert, getUserIdByHubSpotOwner } from '../../../lib/notifications';
+import { createZombieDealAlert } from '../../../lib/notifications';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method !== 'POST') {

@@ -139,7 +139,7 @@ export async function createPipelineHealthAlert(params: {
   const { userId, metric, currentValue, previousValue, threshold } = params;
 
   let level: NotificationLevel = 'info';
-  let title = `Pipeline Alert: ${metric}`;
+  const title = `Pipeline Alert: ${metric}`;
   let message = `Your ${metric} is currently ${currentValue}`;
 
   if (threshold && currentValue > threshold) {
@@ -242,7 +242,7 @@ export async function getUserIdByEmail(email: string): Promise<string | null> {
 /**
  * Get user ID by HubSpot owner ID (helper for deal owner notifications)
  */
-export async function getUserIdByHubSpotOwner(ownerId: string): Promise<string | null> {
+export async function getUserIdByHubSpotOwner(_ownerId: string): Promise<string | null> {
   try {
     // TODO: Implement mapping between HubSpot owner IDs and user IDs
     // For now, return the most recent user

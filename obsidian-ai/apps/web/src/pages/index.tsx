@@ -147,7 +147,7 @@ export default function Home() {
               The average pipeline has <strong>40-60% zombie deals</strong> — opportunities stuck in stages for months with no real buyer engagement.
             </p>
             <p style={{ color: 'var(--color-text-muted)', lineHeight: '1.6' }}>
-              Your reps mark them as "still interested" to avoid tough conversations. Your forecast is fiction.
+              Your reps mark them as &ldquo;still interested&rdquo; to avoid tough conversations. Your forecast is fiction.
             </p>
           </div>
 
@@ -316,7 +316,7 @@ export default function Home() {
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '24px' }}>
           <div className="card" style={{ textAlign: 'left' }}>
             <p style={{ fontSize: '16px', lineHeight: '1.6', marginBottom: '16px', fontStyle: 'italic' }}>
-              "Finally, a tool that shows me the deals I can actually save instead of pretending to predict the future."
+              &ldquo;Finally, a tool that shows me the deals I can actually save instead of pretending to predict the future.&rdquo;
             </p>
             <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
               <div style={{ width: '40px', height: '40px', borderRadius: '50%', background: 'var(--color-border)' }}></div>
@@ -329,7 +329,7 @@ export default function Home() {
 
           <div className="card" style={{ textAlign: 'left' }}>
             <p style={{ fontSize: '16px', lineHeight: '1.6', marginBottom: '16px', fontStyle: 'italic' }}>
-              "We recovered $890K in Q1 by systematically reviving zombie deals. Obsidian paid for itself in 3 weeks."
+              &ldquo;We recovered $890K in Q1 by systematically reviving zombie deals. Obsidian paid for itself in 3 weeks.&rdquo;
             </p>
             <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
               <div style={{ width: '40px', height: '40px', borderRadius: '50%', background: 'var(--color-border)' }}></div>
@@ -342,7 +342,7 @@ export default function Home() {
 
           <div className="card" style={{ textAlign: 'left' }}>
             <p style={{ fontSize: '16px', lineHeight: '1.6', marginBottom: '16px', fontStyle: 'italic' }}>
-              "The explainability is what sold me. I can defend every decision to my board with data."
+              &ldquo;The explainability is what sold me. I can defend every decision to my board with data.&rdquo;
             </p>
             <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
               <div style={{ width: '40px', height: '40px', borderRadius: '50%', background: 'var(--color-border)' }}></div>

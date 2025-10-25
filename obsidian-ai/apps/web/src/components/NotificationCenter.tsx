@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 
 interface Notification {
   id: string;
@@ -25,21 +25,7 @@ export default function NotificationCenter({ userId }: NotificationCenterProps) 
   const [loading, setLoading] = useState(false);
   const [filter, setFilter] = useState<'all' | 'unread'>('unread');
 
-  // Fetch notifications
-  useEffect(() => {
-    if (isOpen && userId) {
-      fetchNotifications();
-    }
-  }, [isOpen, userId, filter]);
-
-  // Update unread count
-  useEffect(() => {
-    if (userId) {
-      fetchUnreadCount();
-    }
-  }, [userId]);
-
-  const fetchNotifications = async () => {
+  const fetchNotifications = useCallback(async () => {
     setLoading(true);
     try {
       const response = await fetch(`/api/notifications?filter=${filter}`);
@@ -50,7 +36,21 @@ export default function NotificationCenter({ userId }: NotificationCenterProps) 
     } finally {
       setLoading(false);
     }
-  };
+  }, [filter]);
+
+  // Fetch notifications
+  useEffect(() => {
+    if (isOpen && userId) {
+      fetchNotifications();
+    }
+  }, [isOpen, userId, fetchNotifications]);
+
+  // Update unread count
+  useEffect(() => {
+    if (userId) {
+      fetchUnreadCount();
+    }
+  }, [userId]);
 
   const fetchUnreadCount = async () => {
     try {
