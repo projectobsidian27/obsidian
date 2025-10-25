@@ -174,6 +174,29 @@ const mockClients: Client[] = [
 
 export default function AdminDashboard() {
   const [activeTab, setActiveTab] = useState<'free-trial' | 'starter' | 'growth' | 'enterprise'>('enterprise');
+  const [showMessageModal, setShowMessageModal] = useState(false);
+  const [showAnnouncementModal, setShowAnnouncementModal] = useState(false);
+  const [selectedClient, setSelectedClient] = useState<Client | null>(null);
+
+  // Message form
+  const [messageForm, setMessageForm] = useState({
+    type: 'system',
+    level: 'info',
+    title: '',
+    message: '',
+    actionUrl: '',
+    actionLabel: '',
+  });
+
+  // Announcement form
+  const [announcementForm, setAnnouncementForm] = useState({
+    type: 'update',
+    level: 'info',
+    title: '',
+    message: '',
+    startDate: new Date().toISOString().split('T')[0],
+    endDate: '',
+  });
 
   // Segment clients by tier
   const clientsByTier = {
@@ -227,6 +250,88 @@ export default function AdminDashboard() {
     alert(`Logging in as ${client.companyName}...\n\nThis will redirect to their dashboard with their data.`);
   };
 
+  const handleSendMessage = (client: Client) => {
+    setSelectedClient(client);
+    setMessageForm({
+      type: 'system',
+      level: 'info',
+      title: '',
+      message: '',
+      actionUrl: '',
+      actionLabel: '',
+    });
+    setShowMessageModal(true);
+  };
+
+  const submitMessage = async () => {
+    if (!selectedClient || !messageForm.title || !messageForm.message) {
+      alert('Please fill in all required fields');
+      return;
+    }
+
+    try {
+      // TODO: Get actual user_id from client
+      const response = await fetch('/api/admin/send-notification', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          userId: selectedClient.id, // This should be the actual database user ID
+          type: messageForm.type,
+          level: messageForm.level,
+          title: messageForm.title,
+          message: messageForm.message,
+          actionUrl: messageForm.actionUrl || undefined,
+          actionLabel: messageForm.actionLabel || undefined,
+        }),
+      });
+
+      const data = await response.json();
+      if (data.success) {
+        alert(`Message sent to ${selectedClient.companyName}!`);
+        setShowMessageModal(false);
+      } else {
+        alert(`Error: ${data.error}`);
+      }
+    } catch (error) {
+      console.error('Error sending message:', error);
+      alert('Failed to send message');
+    }
+  };
+
+  const submitAnnouncement = async () => {
+    if (!announcementForm.title || !announcementForm.message) {
+      alert('Please fill in all required fields');
+      return;
+    }
+
+    try {
+      const response = await fetch('/api/admin/create-announcement', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(announcementForm),
+      });
+
+      const data = await response.json();
+      if (data.success) {
+        alert('Announcement created! It will appear across all client accounts.');
+        setShowAnnouncementModal(false);
+        setAnnouncementForm({
+          type: 'update',
+          level: 'info',
+          title: '',
+          message: '',
+          startDate: new Date().toISOString().split('T')[0],
+          endDate: '',
+        });
+      } else {
+        alert(`Error: ${data.error}`);
+      }
+    } catch (error) {
+      console.error('Error creating announcement:', error);
+      alert('Failed to create announcement');
+    }
+  };
+
   const totalMRR = mockClients.reduce((sum, c) => sum + c.mrr, 0);
   const activeClients = mockClients.filter(c => c.status === 'active').length;
   const atRiskClients = mockClients.filter(c => c.status === 'at-risk').length;
@@ -267,6 +372,13 @@ export default function AdminDashboard() {
                 {atRiskClients}
               </div>
             </div>
+            <button
+              className="btn btn-primary"
+              onClick={() => setShowAnnouncementModal(true)}
+              style={{ padding: '12px 24px' }}
+            >
+              📢 Create Announcement
+            </button>
           </div>
         </div>
       </header>
@@ -456,14 +568,23 @@ export default function AdminDashboard() {
                 </div>
               )}
 
-              {/* Action Button */}
-              <button
-                className="btn btn-primary"
-                onClick={() => handleLoginAsClient(client)}
-                style={{ width: '100%', justifyContent: 'center' }}
-              >
-                🔑 Login as {client.companyName}
-              </button>
+              {/* Action Buttons */}
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px' }}>
+                <button
+                  className="btn btn-secondary"
+                  onClick={() => handleSendMessage(client)}
+                  style={{ justifyContent: 'center' }}
+                >
+                  💬 Message
+                </button>
+                <button
+                  className="btn btn-primary"
+                  onClick={() => handleLoginAsClient(client)}
+                  style={{ justifyContent: 'center' }}
+                >
+                  🔑 Login
+                </button>
+              </div>
             </div>
           ))}
 
@@ -486,6 +607,290 @@ export default function AdminDashboard() {
           )}
         </div>
       </main>
+
+      {/* Message Modal */}
+      {showMessageModal && selectedClient && (
+        <>
+          <div
+            style={{
+              position: 'fixed',
+              top: 0,
+              left: 0,
+              right: 0,
+              bottom: 0,
+              background: 'rgba(0, 0, 0, 0.7)',
+              zIndex: 999,
+            }}
+            onClick={() => setShowMessageModal(false)}
+          />
+          <div
+            className="card card-elevated"
+            style={{
+              position: 'fixed',
+              top: '50%',
+              left: '50%',
+              transform: 'translate(-50%, -50%)',
+              width: '90%',
+              maxWidth: '600px',
+              zIndex: 1000,
+              padding: '32px',
+            }}
+          >
+            <h2 style={{ fontSize: '24px', fontWeight: '700', marginBottom: '8px' }}>
+              Send Message to {selectedClient.companyName}
+            </h2>
+            <p style={{ color: 'var(--color-text-muted)', marginBottom: '24px', fontSize: '14px' }}>
+              This notification will appear in their notification center
+            </p>
+
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+              <div>
+                <label style={{ display: 'block', marginBottom: '8px', fontSize: '13px', fontWeight: '600', textTransform: 'uppercase', color: 'var(--color-text-muted)' }}>
+                  Type
+                </label>
+                <select
+                  className="input"
+                  value={messageForm.type}
+                  onChange={(e) => setMessageForm({ ...messageForm, type: e.target.value })}
+                >
+                  <option value="system">System</option>
+                  <option value="action_required">Action Required</option>
+                  <option value="deal_milestone">Deal Milestone</option>
+                  <option value="pipeline_health">Pipeline Health</option>
+                </select>
+              </div>
+
+              <div>
+                <label style={{ display: 'block', marginBottom: '8px', fontSize: '13px', fontWeight: '600', textTransform: 'uppercase', color: 'var(--color-text-muted)' }}>
+                  Level
+                </label>
+                <select
+                  className="input"
+                  value={messageForm.level}
+                  onChange={(e) => setMessageForm({ ...messageForm, level: e.target.value })}
+                >
+                  <option value="info">Info</option>
+                  <option value="warning">Warning</option>
+                  <option value="critical">Critical</option>
+                  <option value="success">Success</option>
+                </select>
+              </div>
+
+              <div>
+                <label style={{ display: 'block', marginBottom: '8px', fontSize: '13px', fontWeight: '600', textTransform: 'uppercase', color: 'var(--color-text-muted)' }}>
+                  Title *
+                </label>
+                <input
+                  type="text"
+                  className="input"
+                  value={messageForm.title}
+                  onChange={(e) => setMessageForm({ ...messageForm, title: e.target.value })}
+                  placeholder="e.g., Action Required: Review Your Pipeline"
+                />
+              </div>
+
+              <div>
+                <label style={{ display: 'block', marginBottom: '8px', fontSize: '13px', fontWeight: '600', textTransform: 'uppercase', color: 'var(--color-text-muted)' }}>
+                  Message *
+                </label>
+                <textarea
+                  className="input"
+                  value={messageForm.message}
+                  onChange={(e) => setMessageForm({ ...messageForm, message: e.target.value })}
+                  placeholder="Write your message here..."
+                  rows={4}
+                  style={{ resize: 'vertical' }}
+                />
+              </div>
+
+              <div>
+                <label style={{ display: 'block', marginBottom: '8px', fontSize: '13px', fontWeight: '600', textTransform: 'uppercase', color: 'var(--color-text-muted)' }}>
+                  Action URL (optional)
+                </label>
+                <input
+                  type="text"
+                  className="input"
+                  value={messageForm.actionUrl}
+                  onChange={(e) => setMessageForm({ ...messageForm, actionUrl: e.target.value })}
+                  placeholder="/dashboard or https://..."
+                />
+              </div>
+
+              <div>
+                <label style={{ display: 'block', marginBottom: '8px', fontSize: '13px', fontWeight: '600', textTransform: 'uppercase', color: 'var(--color-text-muted)' }}>
+                  Action Label (optional)
+                </label>
+                <input
+                  type="text"
+                  className="input"
+                  value={messageForm.actionLabel}
+                  onChange={(e) => setMessageForm({ ...messageForm, actionLabel: e.target.value })}
+                  placeholder="e.g., View Dashboard"
+                />
+              </div>
+
+              <div style={{ display: 'flex', gap: '12px', marginTop: '8px' }}>
+                <button
+                  className="btn btn-secondary"
+                  onClick={() => setShowMessageModal(false)}
+                  style={{ flex: 1 }}
+                >
+                  Cancel
+                </button>
+                <button
+                  className="btn btn-primary"
+                  onClick={submitMessage}
+                  style={{ flex: 1 }}
+                >
+                  Send Message
+                </button>
+              </div>
+            </div>
+          </div>
+        </>
+      )}
+
+      {/* Announcement Modal */}
+      {showAnnouncementModal && (
+        <>
+          <div
+            style={{
+              position: 'fixed',
+              top: 0,
+              left: 0,
+              right: 0,
+              bottom: 0,
+              background: 'rgba(0, 0, 0, 0.7)',
+              zIndex: 999,
+            }}
+            onClick={() => setShowAnnouncementModal(false)}
+          />
+          <div
+            className="card card-elevated"
+            style={{
+              position: 'fixed',
+              top: '50%',
+              left: '50%',
+              transform: 'translate(-50%, -50%)',
+              width: '90%',
+              maxWidth: '600px',
+              zIndex: 1000,
+              padding: '32px',
+            }}
+          >
+            <h2 style={{ fontSize: '24px', fontWeight: '700', marginBottom: '8px' }}>
+              Create System-Wide Announcement
+            </h2>
+            <p style={{ color: 'var(--color-text-muted)', marginBottom: '24px', fontSize: '14px' }}>
+              This banner will appear across all client accounts
+            </p>
+
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+              <div>
+                <label style={{ display: 'block', marginBottom: '8px', fontSize: '13px', fontWeight: '600', textTransform: 'uppercase', color: 'var(--color-text-muted)' }}>
+                  Type
+                </label>
+                <select
+                  className="input"
+                  value={announcementForm.type}
+                  onChange={(e) => setAnnouncementForm({ ...announcementForm, type: e.target.value })}
+                >
+                  <option value="maintenance">Maintenance</option>
+                  <option value="feature">New Feature</option>
+                  <option value="update">Update</option>
+                  <option value="alert">Alert</option>
+                  <option value="sales">Sales/Promotion</option>
+                </select>
+              </div>
+
+              <div>
+                <label style={{ display: 'block', marginBottom: '8px', fontSize: '13px', fontWeight: '600', textTransform: 'uppercase', color: 'var(--color-text-muted)' }}>
+                  Level
+                </label>
+                <select
+                  className="input"
+                  value={announcementForm.level}
+                  onChange={(e) => setAnnouncementForm({ ...announcementForm, level: e.target.value })}
+                >
+                  <option value="info">Info (Teal)</option>
+                  <option value="warning">Warning (Amber)</option>
+                  <option value="critical">Critical (Red)</option>
+                </select>
+              </div>
+
+              <div>
+                <label style={{ display: 'block', marginBottom: '8px', fontSize: '13px', fontWeight: '600', textTransform: 'uppercase', color: 'var(--color-text-muted)' }}>
+                  Title *
+                </label>
+                <input
+                  type="text"
+                  className="input"
+                  value={announcementForm.title}
+                  onChange={(e) => setAnnouncementForm({ ...announcementForm, title: e.target.value })}
+                  placeholder="e.g., NEW FEATURE"
+                />
+              </div>
+
+              <div>
+                <label style={{ display: 'block', marginBottom: '8px', fontSize: '13px', fontWeight: '600', textTransform: 'uppercase', color: 'var(--color-text-muted)' }}>
+                  Message *
+                </label>
+                <textarea
+                  className="input"
+                  value={announcementForm.message}
+                  onChange={(e) => setAnnouncementForm({ ...announcementForm, message: e.target.value })}
+                  placeholder="Keep it short and actionable..."
+                  rows={3}
+                  style={{ resize: 'vertical' }}
+                />
+              </div>
+
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
+                <div>
+                  <label style={{ display: 'block', marginBottom: '8px', fontSize: '13px', fontWeight: '600', textTransform: 'uppercase', color: 'var(--color-text-muted)' }}>
+                    Start Date
+                  </label>
+                  <input
+                    type="date"
+                    className="input"
+                    value={announcementForm.startDate}
+                    onChange={(e) => setAnnouncementForm({ ...announcementForm, startDate: e.target.value })}
+                  />
+                </div>
+
+                <div>
+                  <label style={{ display: 'block', marginBottom: '8px', fontSize: '13px', fontWeight: '600', textTransform: 'uppercase', color: 'var(--color-text-muted)' }}>
+                    End Date (optional)
+                  </label>
+                  <input
+                    type="date"
+                    className="input"
+                    value={announcementForm.endDate}
+                    onChange={(e) => setAnnouncementForm({ ...announcementForm, endDate: e.target.value })}
+                  />
+                </div>
+              </div>
+
+              <div style={{ display: 'flex', gap: '12px', marginTop: '8px' }}>
+                <button
+                  className="btn btn-secondary"
+                  onClick={() => setShowAnnouncementModal(false)}
+                  style={{ flex: 1 }}
+                >
+                  Cancel
+                </button>
+                <button
+                  className="btn btn-primary"
+                  onClick={submitAnnouncement}
+                  style={{ flex: 1 }}
+                >
+                  Create Announcement
+                </button>
+              </div>
+            </div>
+          </div>
+        </>
+      )}
     </div>
   );
 }

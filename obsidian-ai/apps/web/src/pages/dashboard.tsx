@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { mockDeals, calculateMockMetrics } from '../lib/mockData';
 import NotificationCenter from '../components/NotificationCenter';
+import AnnouncementBar from '../components/AnnouncementBar';
 
 interface Deal {
   id: string;
@@ -131,6 +132,9 @@ export default function Dashboard() {
 
   return (
     <div style={{ minHeight: '100vh', background: 'var(--color-bg)' }}>
+      {/* Announcement Bar */}
+      <AnnouncementBar />
+
       {/* Top Navigation */}
       <header style={{
         background: 'var(--color-surface)',
