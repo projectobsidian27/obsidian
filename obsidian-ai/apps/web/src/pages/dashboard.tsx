@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { mockDeals, calculateMockMetrics } from '../lib/mockData';
+import NotificationCenter from '../components/NotificationCenter';
 
 interface Deal {
   id: string;
@@ -181,6 +182,7 @@ export default function Dashboard() {
                 </>
               )}
             </div>
+            <NotificationCenter />
           </div>
         </div>
       </header>
