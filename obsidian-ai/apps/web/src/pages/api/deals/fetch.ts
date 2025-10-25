@@ -34,7 +34,7 @@ export default async function handler(
     ]);
 
     // Create owner map for quick lookup
-    const ownerMap = new Map(
+    const ownerMap = new Map<string, string>(
       owners.map((owner: { id: string; firstName: string; lastName: string }) => [
         owner.id,
         `${owner.firstName} ${owner.lastName}`.trim() || owner.id
