@@ -33,9 +33,8 @@ export default function AnnouncementBar() {
       const data = await response.json();
       if (data.success && data.announcements) {
         // Filter out dismissed announcements
-        const dismissedIds = new Set(
-          JSON.parse(localStorage.getItem('dismissed_announcements') || '[]')
-        );
+        const dismissedArray = JSON.parse(localStorage.getItem('dismissed_announcements') || '[]') as string[];
+        const dismissedIds = new Set<string>(dismissedArray);
         setDismissed(dismissedIds);
         setAnnouncements(
           data.announcements.filter((a: Announcement) => !dismissedIds.has(a.id))
