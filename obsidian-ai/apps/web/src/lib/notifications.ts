@@ -242,6 +242,7 @@ export async function getUserIdByEmail(email: string): Promise<string | null> {
 /**
  * Get user ID by HubSpot owner ID (helper for deal owner notifications)
  */
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export async function getUserIdByHubSpotOwner(_ownerId: string): Promise<string | null> {
   try {
     // TODO: Implement mapping between HubSpot owner IDs and user IDs
