@@ -1,25 +1,94 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { mockDeals, calculateMockMetrics } from '../lib/mockData';
+
+interface Deal {
+  id: string;
+  name: string;
+  owner: string;
+  amount: number;
+  dealAge: number;
+  daysSinceLastActivity: number;
+  healthScore: number;
+  status: 'healthy' | 'at-risk' | 'zombie';
+  signals: {
+    noRecentActivity?: boolean;
+    missingNextSteps?: boolean;
+    stuckInStage?: boolean;
+    lowEngagement?: boolean;
+  };
+}
+
+interface Metrics {
+  totalDeals: number;
+  zombieDeals: number;
+  atRiskDeals: number;
+  healthyDeals: number;
+  totalValue: number;
+  revenueAtRisk: number;
+  avgDealAge: number;
+}
+
+interface ApiResponse {
+  success: boolean;
+  deals: Deal[];
+  metrics: Metrics;
+  fetchedAt: string;
+}
 
 export default function Dashboard() {
   const [timeRange, setTimeRange] = useState('30d');
   const [useMockData, setUseMockData] = useState(true); // Toggle for mock vs real data
+  const [realDeals, setRealDeals] = useState<Deal[]>([]);
+  const [realMetrics, setRealMetrics] = useState<Metrics | null>(null);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  // Fetch real data when toggle is disabled
+  useEffect(() => {
+    if (!useMockData) {
+      fetchRealData();
+    }
+  }, [useMockData]);
+
+  const fetchRealData = async () => {
+    setLoading(true);
+    setError(null);
+    try {
+      const response = await fetch('/api/deals/fetch');
+      const data: ApiResponse = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.error || 'Failed to fetch deals');
+      }
+
+      setRealDeals(data.deals);
+      setRealMetrics(data.metrics);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Unknown error');
+      console.error('Error fetching real data:', err);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   // Calculate metrics from mock data
   const mockMetrics = calculateMockMetrics();
 
+  // Use real metrics if available, otherwise use mock
+  const currentMetrics = useMockData || !realMetrics ? mockMetrics : realMetrics;
+
   const metrics = {
-    revenueAtRisk: mockMetrics.revenueAtRisk,
+    revenueAtRisk: currentMetrics.revenueAtRisk,
     revenueAtRiskDelta: -12.4, // TODO: Calculate from historical data
-    zombieDeals: mockMetrics.zombieDeals,
+    zombieDeals: currentMetrics.zombieDeals,
     zombieDealsDelta: -8.0,
-    healthyDeals: mockMetrics.healthyDeals,
+    healthyDeals: currentMetrics.healthyDeals,
     healthyDealsDelta: 5.2,
-    avgDealAge: mockMetrics.avgDealAge,
+    avgDealAge: currentMetrics.avgDealAge,
     avgDealAgeDelta: 12.1,
   };
 
-  // Use mock deals and format last activity
+  // Format last activity helper
   const formatLastActivity = (days: number): string => {
     if (days === 0) return 'Today';
     if (days === 1) return '1 day ago';
@@ -29,8 +98,11 @@ export default function Dashboard() {
     return `${months} months ago`;
   };
 
-  // Transform mock deals for display
-  const deals = mockDeals.slice(0, 10).map(deal => ({
+  // Use real deals if available, otherwise use mock
+  const currentDeals = useMockData || realDeals.length === 0 ? mockDeals : realDeals;
+
+  // Transform deals for display
+  const deals = currentDeals.slice(0, 10).map(deal => ({
     ...deal,
     lastActivityFormatted: formatLastActivity(deal.daysSinceLastActivity),
   }));
@@ -86,16 +158,28 @@ export default function Dashboard() {
               <span>Use Mock Data</span>
             </label>
             <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-              <span style={{ fontSize: '13px', color: 'var(--color-text-muted)' }}>
-                {useMockData ? 'Demo Mode' : 'HubSpot Connected'}
-              </span>
-              <div style={{
-                width: '8px',
-                height: '8px',
-                borderRadius: '50%',
-                background: useMockData ? 'var(--color-signal-amber)' : 'var(--color-success)',
-                boxShadow: useMockData ? '0 0 8px var(--color-signal-amber)' : '0 0 8px var(--color-success)',
-              }} />
+              {loading ? (
+                <span style={{ fontSize: '13px', color: 'var(--color-text-muted)' }}>
+                  Loading...
+                </span>
+              ) : error ? (
+                <span style={{ fontSize: '13px', color: 'var(--color-crimson-alert)' }}>
+                  Error: {error}
+                </span>
+              ) : (
+                <>
+                  <span style={{ fontSize: '13px', color: 'var(--color-text-muted)' }}>
+                    {useMockData ? 'Demo Mode' : 'HubSpot Connected'}
+                  </span>
+                  <div style={{
+                    width: '8px',
+                    height: '8px',
+                    borderRadius: '50%',
+                    background: useMockData ? 'var(--color-signal-amber)' : 'var(--color-success)',
+                    boxShadow: useMockData ? '0 0 8px var(--color-signal-amber)' : '0 0 8px var(--color-success)',
+                  }} />
+                </>
+              )}
             </div>
           </div>
         </div>
